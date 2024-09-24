@@ -8,3 +8,20 @@ body{
     justify-content: space-between;
     height: 100vh;
 }
+
+.b_posts {
+    display: flex;
+    justify-content: center;
+    align-items: center;     
+}
+
+
+
+.posts {
+    margin: 10px; 
+    max-width: 600px;
+    max-height: 200px;
+    background-color: pink;
+    border: 1px solid;
+    border-color: black;
+}

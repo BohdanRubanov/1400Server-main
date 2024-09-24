@@ -9,6 +9,13 @@ const PORT = 8000
 //адреса на наш комп'ютер
 const HOST = 'localhost'
 
+
+
+app.set('view engine', 'ejs')
+app.set('views', path.join(__dirname, 'templates'))
+
+
+
 app.use('/static/', express.static(path.join(__dirname, 'static'))) 
 
 //оброблення get запиту, першим аргументом посилання, другим функція на цей запит
@@ -22,6 +29,20 @@ app.get('/date', (req, res) => {
     
     res.send(moment().format('LTS'))
 })
+
+
+
+app.get('/posts', (req, res) => {
+
+    const context ={
+        posts: [{name: 'post1', author: "Author1"}, {name: 'post2', author: "Author2"}, {name: 'post3', author: "Author3"}]
+    }
+
+    res.render('posts', context)
+})
+
+
+
 //запускає додаток по порту та хосту та виконує задану функцію
 app.listen(PORT, HOST, () =>{
     console.log(`server is running on http://${HOST}:${PORT}`)
