@@ -30,16 +30,24 @@ app.get('/date', (req, res) => {
     res.send(moment().format('LTS'))
 })
 
-
+const context ={
+    posts: [{id: 1, name: 'post1', author: "Author1", date: "23.09"}, 
+            {id: 2, name: 'post2', author: "Author2", date: "24.09"}, 
+            {id: 3, name: 'post3', author: "Author3", date: "25.09"}]
+}
 
 app.get('/posts', (req, res) => {
 
-    const context ={
-        posts: [{name: 'post1', author: "Author1"}, {name: 'post2', author: "Author2"}, {name: 'post3', author: "Author3"}]
-    }
-
+    
     res.render('posts', context)
 })
+
+app.get('/post/:id', (req, res) => {
+    const url_id = req.params.id
+    const post_by_id = context.posts[url_id - 1]
+    res.render('post', post_by_id)
+})
+
 
 
 
