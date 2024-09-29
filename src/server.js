@@ -42,6 +42,7 @@ app.get('/posts', (req, res) => {
     res.render('posts', context)
 })
 
+
 app.get('/post/:id', (req, res) => {
     const url_id = req.params.id
     const post_by_id = context.posts[url_id - 1]
