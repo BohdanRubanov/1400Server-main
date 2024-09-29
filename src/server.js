@@ -24,6 +24,9 @@ app.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, "./templates/index.html"))
     console.log("ktoto zashel na stranicu")
 })
+app.get('/user', (req, res) => {
+    res.sendFile(path.resolve(__dirname, "./templates/user.html"))
+})
 app.get('/date', (req, res) => {
     console.log(moment().format('LTS'))
     
