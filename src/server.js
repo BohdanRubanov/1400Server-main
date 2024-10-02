@@ -52,7 +52,13 @@ app.get('/posts', (req, res) => {
 app.get('/post/:id', (req, res) => {
     const url_id = req.params.id
     const post_by_id = context.posts[url_id - 1]
-    res.render('post', post_by_id)
+    if (url_id <= context.posts.length) 
+        {
+            res.render('post', post_by_id)
+    }else{
+        res.send("ban")
+    }
+    
 })
 app.get('/comments/', (req, res) => {
     res.render('comments', context)

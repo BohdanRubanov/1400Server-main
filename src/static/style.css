@@ -103,3 +103,15 @@ body{
     color: gray;
   }
   
+
+
+.post{
+  max-width: 600px;  
+    max-height: 200px;     
+    width: 100%;           
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 6px;
+    padding: 15px;
+    margin: 10px; 
+}
