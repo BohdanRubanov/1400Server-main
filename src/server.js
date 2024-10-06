@@ -1,4 +1,5 @@
 //підключає бібліотеку експрес
+const { Console } = require('console')
 const express = require('express')
 const moment = require('moment')
 const path = require('path')
@@ -13,7 +14,7 @@ const HOST = 'localhost'
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'templates'))
-
+app.use(express.json()) 
 
 
 app.use('/static/', express.static(path.join(__dirname, 'static'))) 
@@ -64,7 +65,17 @@ app.get('/comments/', (req, res) => {
     res.render('comments', context)
 })
 
+app.post('/posts/create', (req, res) => {
+    if (res.statusCode === 200){
+        const data = req.body
+        context.posts.push(data)
+        console.log('Всё супер')
+    }else{
+        console.log('Всё плоха')
+    }
+    
 
+})
 
 
 //запускає додаток по порту та хосту та виконує задану функцію
