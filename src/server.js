@@ -3,6 +3,7 @@ const { Console } = require('console')
 const express = require('express')
 const moment = require('moment')
 const path = require('path')
+const postRouter = require('./routers/postRouter')
 //створення експерес застосунку
 const app = express()
 //вказівник на застосунок або сервіс запущений на комп'ютері
@@ -18,7 +19,7 @@ app.use(express.json())
 
 
 app.use('/static/', express.static(path.join(__dirname, 'static'))) 
-
+app.use('/posts/', postRouter)
 //оброблення get запиту, першим аргументом посилання, другим функція на цей запит
 //ця функція відправляє відповідь
 app.get('/', (req, res) => {
@@ -35,47 +36,19 @@ app.get('/date', (req, res) => {
 })
 
 const context ={
-    posts: [{id: 1, name: 'Post1', author: "Author1", date: "23.09"}, 
-            {id: 2, name: 'Post2', author: "Author2", date: "24.09"}, 
-            {id: 3, name: 'Post3', author: "Author3", date: "25.09"}],
     comments: [{id: 1, title: 'Dislike', author: "Oleg", message: "23.09"}, 
                 {id: 2, title: 'Super cool', author: "Alex", message: "24.09"}, 
                 {id: 3, title: 'Too bad', author: "Ne Oleg", message: "25.09"}]
 }
 
-app.get('/posts', (req, res) => {
-
-    
-    res.render('posts', context)
-})
 
 
-app.get('/post/:id', (req, res) => {
-    const url_id = req.params.id
-    const post_by_id = context.posts[url_id - 1]
-    if (url_id <= context.posts.length) 
-        {
-            res.render('post', post_by_id)
-    }else{
-        res.send("ban")
-    }
-    
-})
+
 app.get('/comments/', (req, res) => {
     res.render('comments', context)
 })
 
-app.post('/posts/create', (req, res) => {
-    if (res.statusCode === 200){
-        const data = req.body
-        context.posts.push(data)
-        console.log('Всё супер')
-    }else{
-        console.log('Всё плоха')
-    }
-    
 
-})
 
 
 //запускає додаток по порту та хосту та виконує задану функцію
