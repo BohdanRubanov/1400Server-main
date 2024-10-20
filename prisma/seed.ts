@@ -6,9 +6,12 @@ const prisma = new PrismaClient()
 async function createPost(){
     const post = await prisma.post.create({
         data: {
-            name: 'First post',
+            name: 'Last post',
             author: 'Me',
-            date: '16.10'
+            date: '20.10'
+        },
+        include: {
+            comments: true
         }
     })
     console.log(post)
@@ -69,10 +72,144 @@ async function updatePost() {
 
 }
 
+async function createComment(){
+    const comment = await prisma.comment.create({
+        data: {
+            title: 'Cool',
+            body: 'Not Cool',
+            img: 'No',
+            postId: 4
+        }
+    })
+    console.log(comment)
+}
+async function findComment(){
+    const comment = await prisma.comment.findUnique({
+        where: {
+            id: 1
+        }
+    })
+    console.log(comment)
+}
+async function findPostWithComments(){
+    const post = await prisma.post.findUnique({
+        where: {
+            id: 1
+        },
+        include: {
+            comments: true
+        }
+    })
+    console.log(post)
+}
+async function findCommentsWithPosts(){
+    const comment = await prisma.comment.findUnique({
+        where: {
+            id: 1
+        },
+        include: {
+            Post: true
+        }
+    })
+    console.log(comment)
+}
+async function findComments(){
+    const comment = await prisma.comment.findMany({
+        where: {
+            id: {
+                in: [1,2]
+            }
+        }
+    })
+    console.log(comment)
+}
+async function createComments(){
+    const comment = await prisma.comment.createMany({
+        data: [{
+            title: 'Cool',
+            body: 'Not Cool',
+            img: 'No',
+            postId: 1
+        },
+        {
+            title: 'Bad',
+            body: 'Not Bad',
+            img: 'Yes',
+            postId: 1
+        }]
+    })
+    console.log(comment)
+}
+
+async function deleteComment() {
+    const comment = await prisma.comment.delete({
+        where: {
+            id: 1
+        }
+    })
+    console.log(comment)
+}
+
+async function updateComment() {
+    const comment = await prisma.comment.update({
+        where: {
+            id: 1
+        },
+        data: {
+            title: 'Ok'
+        }
+    })
+    console.log(comment)
+
+}
+
+async function connectCommentsToPosts() {
+    const comments = await prisma.comment.updateMany({
+      where: {
+        id: 1, 
+      },
+      data: {
+        postId: 2, 
+      },
+    })
+    console.log(comments)
+  }
+
+async function createPostWithComments() {
+  const post = await prisma.post.create({
+    data: {
+      name: 'bebebe',
+      author: 'bebebe',
+      date: '25.10',
+    },
+    include: {
+        comments: true
+      }
+  })
+
+  const comments = await prisma.comment.createMany({
+    data: [
+      {
+        title: 'First',
+        body: 'bebebe',
+        img: 'No',
+        postId: post.id, 
+      },
+      {
+        title: 'Second',
+        body: 'bebebe',
+        img: 'Yes',
+        postId: post.id, 
+      },
+    ],
+  })
+
+  console.log(post, comments)
+}
 
 
 async function main() {
-    await findPosts()
+    createPostWithComments()
 
 }
 
