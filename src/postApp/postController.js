@@ -26,16 +26,11 @@ function getPostById(req, res) {
         console.log(req.params.id);
         const id = Number(req.params.id);
         const data = yield postServices_1.default.getPostById(id);
-        if (data != undefined) {
-            if (id <= data.length) {
-                res.render('post', data.context);
-            }
-            else {
-                res.send("ban");
-            }
+        if (data.status == 'not found') {
+            res.send("post not found");
         }
-        else {
-            console.log("No post");
+        if (data.status == 'success') {
+            res.render('post', { post: data.context });
         }
     });
 }

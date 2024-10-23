@@ -86,7 +86,7 @@ async function getPostById(id: number){
     })
     if (!post) {
         return {
-            status: 'not found',
+            status: 'error',
             message: 'Post not found',
             data: null
         }}
@@ -109,7 +109,11 @@ async function getPostById(id: number){
                 console.log(err.message);
                 throw err;
             }
-    }}
+    }
+        return {
+            status: 'error',
+            message: 'error',
+        }}
 
 }
 

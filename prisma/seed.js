@@ -26,16 +26,6 @@ function createPost() {
         console.log(post);
     });
 }
-function findPost() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const post = yield prisma.post.findUnique({
-            where: {
-                id: 1
-            }
-        });
-        console.log(post);
-    });
-}
 function findPosts() {
     return __awaiter(this, void 0, void 0, function* () {
         const post = yield prisma.post.findMany({
@@ -235,9 +225,19 @@ function createPostWithComments() {
         console.log(post, comments);
     });
 }
+function findPost() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const post = yield prisma.post.findUnique({
+            where: {
+                id: 50
+            }
+        });
+        console.log(post);
+    });
+}
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        createPostWithComments();
+        findPost();
     });
 }
 main().then(() => {

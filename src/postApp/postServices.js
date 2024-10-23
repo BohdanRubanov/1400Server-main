@@ -24,19 +24,19 @@ function getAllPosts() {
 }
 function getPostById(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        const context = {
-            post: yield postRepository_1.default.getPostById(id)
-        };
-        const allPosts = yield postRepository_1.default.getAllPosts();
-        if (allPosts != undefined) {
+        const data = yield postRepository_1.default.getPostById(id);
+        if (data.status == 'not found' || data.status == 'error') {
             return {
-                context: context,
-                length: allPosts.count
+                status: 'not found',
+                message: 'not found',
             };
         }
-        else {
-            console.log("No post");
-        }
+        console.log(data);
+        return {
+            context: data.post,
+            message: data.message,
+            status: data.status
+        };
     });
 }
 function createPost(data) {

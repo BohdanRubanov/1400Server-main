@@ -16,14 +16,7 @@ async function createPost(){
     })
     console.log(post)
 }
-async function findPost(){
-    const post = await prisma.post.findUnique({
-        where: {
-            id: 1
-        }
-    })
-    console.log(post)
-}
+
 async function findPosts(){
     const post = await prisma.post.findMany({
         where: {
@@ -208,8 +201,20 @@ async function createPostWithComments() {
 }
 
 
+
+
+async function findPost(){
+    const post = await prisma.post.findUnique({
+        where: {
+            id: 50
+        }
+    })
+    console.log(post)
+}
+
+
 async function main() {
-    createPostWithComments()
+    findPost()
 
 }
 

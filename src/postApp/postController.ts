@@ -15,15 +15,13 @@ async function getPostById(req: Request, res: Response){
     console.log(req.params.id)
     const id = Number(req.params.id)
     const data = await service_funcs.getPostById(id)
-    if (data.status == 'not found'){
-        return res.send("post not found")
+    if (data.status == 'error'){
+        res.send("post not found")
     }
-    if (id <= data.length){
-        res.render('post', data.context)
-    } else{
-        res.send("ban")
+    if (data.status == 'success'){
+        res.render('post', {post: data.context})
     }
-    
+
 }
 
 async function createPost(req: Request, res: Response){

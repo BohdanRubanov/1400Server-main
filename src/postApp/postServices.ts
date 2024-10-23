@@ -15,40 +15,20 @@ async function getAllPosts(){
 }
 
 async function getPostById(id: number){
-    const context = {
-        post: await postRepository.getPostById(id)
-    }
-    const allPostsLenght = await postRepository.getPostCount()
+    const data = await postRepository.getPostById(id)
 
-    // if (!allPostsLenght.count){
-    //     return {
-    //         status: 'not found',
-    //         message: 'error',
-    //     }}
-    
-    // if(!context.post){
-    //     return {
-    //         status: 'not found',
-    //         message: 'Posts not found',
-    //         length: 0
-    //     }}
-
-    if (context.post?.status == 'not found' || context.post?.status == 'error'){
+    if (data.status == 'error' || data.status == 'error'){
         return {
-                    status: 'not found',
+                    status: 'error',
                     message: 'not found',
                 }}
-    if (allPostsLenght.status == 'not found' || allPostsLenght.status == 'error'){
-        return {
-                    status: 'not found',
-                    message: 'not found',
-                }}
+    console.log(data)
+
         
     return {
-        context: context.post,
-        length: allPostsLenght.count,
-        message: context.post.message,
-        status: context.post.status
+        context: data.post,
+        message: data.message,
+        status: data.status
     }}
     
 
