@@ -15,9 +15,34 @@ function createPost() {
     return __awaiter(this, void 0, void 0, function* () {
         const post = yield prisma.post.create({
             data: {
-                name: 'First post',
+                name: 'Last post',
                 author: 'Me',
-                date: '16.10'
+                date: '20.10'
+            },
+            include: {
+                comments: true
+            }
+        });
+        console.log(post);
+    });
+}
+function findPost() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const post = yield prisma.post.findUnique({
+            where: {
+                id: 1
+            }
+        });
+        console.log(post);
+    });
+}
+function findPosts() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const post = yield prisma.post.findMany({
+            where: {
+                id: {
+                    in: [1, 2]
+                }
             }
         });
         console.log(post);
@@ -63,22 +88,156 @@ function updatePost() {
         console.log(post);
     });
 }
-function findProduct() {
+function createComment() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const comment = yield prisma.comment.create({
+            data: {
+                title: 'Cool',
+                body: 'Not Cool',
+                img: 'No',
+                postId: 4
+            }
+        });
+        console.log(comment);
+    });
+}
+function findComment() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const comment = yield prisma.comment.findUnique({
+            where: {
+                id: 1
+            }
+        });
+        console.log(comment);
+    });
+}
+function findPostWithComments() {
     return __awaiter(this, void 0, void 0, function* () {
         const post = yield prisma.post.findUnique({
             where: {
                 id: 1
+            },
+            include: {
+                comments: true
             }
         });
         console.log(post);
     });
 }
+function findCommentsWithPosts() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const comment = yield prisma.comment.findUnique({
+            where: {
+                id: 1
+            },
+            include: {
+                Post: true
+            }
+        });
+        console.log(comment);
+    });
+}
+function findComments() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const comment = yield prisma.comment.findMany({
+            where: {
+                id: {
+                    in: [1, 2]
+                }
+            }
+        });
+        console.log(comment);
+    });
+}
+function createComments() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const comment = yield prisma.comment.createMany({
+            data: [{
+                    title: 'Cool',
+                    body: 'Not Cool',
+                    img: 'No',
+                    postId: 1
+                },
+                {
+                    title: 'Bad',
+                    body: 'Not Bad',
+                    img: 'Yes',
+                    postId: 1
+                }]
+        });
+        console.log(comment);
+    });
+}
+function deleteComment() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const comment = yield prisma.comment.delete({
+            where: {
+                id: 1
+            }
+        });
+        console.log(comment);
+    });
+}
+function updateComment() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const comment = yield prisma.comment.update({
+            where: {
+                id: 1
+            },
+            data: {
+                title: 'Ok'
+            }
+        });
+        console.log(comment);
+    });
+}
+function connectCommentsToPosts() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const comments = yield prisma.comment.updateMany({
+            where: {
+                id: 1,
+            },
+            data: {
+                postId: 2,
+            },
+        });
+        console.log(comments);
+    });
+}
+function createPostWithComments() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const post = yield prisma.post.create({
+            data: {
+                name: 'bebebe',
+                author: 'bebebe',
+                date: '25.10',
+            },
+            include: {
+                comments: true
+            }
+        });
+        const comments = yield prisma.comment.createMany({
+            data: [
+                {
+                    title: 'First',
+                    body: 'bebebe',
+                    img: 'No',
+                    postId: post.id,
+                },
+                {
+                    title: 'Second',
+                    body: 'bebebe',
+                    img: 'Yes',
+                    postId: post.id,
+                },
+            ],
+        });
+        console.log(post, comments);
+    });
+}
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield createPosts();
-        // await findProduct()
-        // await updateProduct()
-        // await deleteProduct()
+        createPostWithComments();
     });
 }
 main().then(() => {

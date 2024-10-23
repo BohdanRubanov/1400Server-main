@@ -1,6 +1,6 @@
 
 
-import router from './routers/postRouter'
+import router from './postApp/postRouter'
 
 import express, { Express, Request, Response } from 'express'
 
@@ -25,6 +25,7 @@ app.use(express.json())
 
 app.use('/static/', express.static(path.join(__dirname, 'static'))) 
 app.use('/posts/', router)
+
 //оброблення get запиту, першим аргументом посилання, другим функція на цей запит
 //ця функція відправляє відповідь
 app.get('/', (req: Request, res: Response) => {

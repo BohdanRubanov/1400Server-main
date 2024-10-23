@@ -8,7 +8,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 // const postController = require('../controllers/postController')
-const postController_1 = __importDefault(require("../controllers/postController"));
+const postController_1 = __importDefault(require("./postController"));
 router.get('/', postController_1.default.getAllPosts);
 router.get('/:id', postController_1.default.getPostById);
 router.post('/create', postController_1.default.createPost);
