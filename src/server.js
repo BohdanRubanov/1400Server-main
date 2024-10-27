@@ -3,7 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const postRouter_1 = __importDefault(require("./postApp/postRouter"));
+const regRouter_1 = __importDefault(require("./registrationApp/regRouter"));
 const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
 const moment_1 = __importDefault(require("moment"));
@@ -16,8 +18,10 @@ const HOST = 'localhost';
 app.set('view engine', 'ejs');
 app.set('views', path_1.default.join(__dirname, 'templates'));
 app.use(express_1.default.json());
+app.use((0, cookie_parser_1.default)());
 app.use('/static/', express_1.default.static(path_1.default.join(__dirname, 'static')));
 app.use('/posts/', postRouter_1.default);
+app.use('/', regRouter_1.default);
 //оброблення get запиту, першим аргументом посилання, другим функція на цей запит
 //ця функція відправляє відповідь
 app.get('/', (req, res) => {

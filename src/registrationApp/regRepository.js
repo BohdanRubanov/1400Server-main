@@ -12,41 +12,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// Здесь вся логика работы с данными 
-const postRepository_1 = __importDefault(require("./postRepository"));
-function getAllPosts() {
+const prismaClient_1 = __importDefault(require("../client/prismaClient"));
+function findUserByEmail(email) {
     return __awaiter(this, void 0, void 0, function* () {
-        const context = {
-            posts: yield postRepository_1.default.getAllPosts()
-        };
-        return context;
-    });
-}
-function getPostById(id) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const data = yield postRepository_1.default.getPostById(id);
-        if (data.status == 'error' || data.status == 'error') {
-            return {
-                status: 'error',
-                message: 'not found',
-            };
+        if (!email) {
+            throw new Error("Email is required");
         }
-        console.log(data);
-        return {
-            context: data.post,
-            message: data.message,
-            status: data.status
-        };
+        const user = yield prismaClient_1.default.user.findUnique({
+            where: {
+                email: email,
+            }
+        });
+        if (!user) {
+            return null;
+        }
+        return user;
     });
 }
-function createPost(data) {
+function createUser(userData) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield postRepository_1.default.createPost(data);
+        const user = yield prismaClient_1.default.user.create({
+            data: userData,
+        });
+        return user;
     });
 }
-const service_funcs = {
-    getAllPosts: getAllPosts,
-    getPostById: getPostById,
-    createPost: createPost
+const regRepository = {
+    findUserByEmail: findUserByEmail,
+    createUser: createUser
 };
-exports.default = service_funcs;
+exports.default = regRepository;

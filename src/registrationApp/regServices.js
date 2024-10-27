@@ -12,41 +12,42 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// Здесь вся логика работы с данными 
-const postRepository_1 = __importDefault(require("./postRepository"));
-function getAllPosts() {
+const regRepository_1 = __importDefault(require("./regRepository"));
+function authenticateUser(email, password) {
     return __awaiter(this, void 0, void 0, function* () {
-        const context = {
-            posts: yield postRepository_1.default.getAllPosts()
-        };
-        return context;
-    });
-}
-function getPostById(id) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const data = yield postRepository_1.default.getPostById(id);
-        if (data.status == 'error' || data.status == 'error') {
-            return {
-                status: 'error',
-                message: 'not found',
-            };
+        const user = yield regRepository_1.default.findUserByEmail(email);
+        if (!user) {
+            return null;
         }
-        console.log(data);
-        return {
-            context: data.post,
-            message: data.message,
-            status: data.status
+        if (user.password != password) {
+            return null;
+        }
+        const userWithoutPassword = {
+            username: user.username,
+            email: user.email,
+            role: user.role
         };
+        return userWithoutPassword;
     });
 }
-function createPost(data) {
+function registerUser(email, password, username) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield postRepository_1.default.createPost(data);
+        const userExist = yield regRepository_1.default.findUserByEmail(email);
+        if (userExist) {
+            return "User exists";
+        }
+        const newUser = {
+            email: email,
+            password: password,
+            username: username,
+            role: "user"
+        };
+        const createUser = yield regRepository_1.default.createUser(newUser);
+        return createUser;
     });
 }
-const service_funcs = {
-    getAllPosts: getAllPosts,
-    getPostById: getPostById,
-    createPost: createPost
+const regService = {
+    authenticateUser: authenticateUser,
+    registerUser: registerUser
 };
-exports.default = service_funcs;
+exports.default = regService;

@@ -26,7 +26,7 @@ function getPostById(req, res) {
         console.log(req.params.id);
         const id = Number(req.params.id);
         const data = yield postServices_1.default.getPostById(id);
-        if (data.status == 'not found') {
+        if (data.status == 'error') {
             res.send("post not found");
         }
         if (data.status == 'success') {

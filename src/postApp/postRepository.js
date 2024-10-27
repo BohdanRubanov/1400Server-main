@@ -96,7 +96,7 @@ function getPostById(id) {
             });
             if (!post) {
                 return {
-                    status: 'not found',
+                    status: 'error',
                     message: 'Post not found',
                     data: null
                 };
