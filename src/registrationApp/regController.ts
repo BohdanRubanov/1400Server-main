@@ -4,6 +4,9 @@ import express, { Request, Response } from 'express';
 // Обычно в сервисе происходит запрос к базе данных
 import regService from './regServices';
 
+import { SECRET_KEY } from '../config/token'
+import { sign } from 'jsonwebtoken'
+
 function login(req: Request, res: Response){
     res.render('login')
 
@@ -19,8 +22,8 @@ async function authLogin(req: Request, res: Response) {
         const user = await regService.authenticateUser(userData.email, userData.password);
 
         if (user) {
-            console.log(JSON.stringify(user), "Успешный вход")
-            res.cookie('user', JSON.stringify(user));
+            const token = sign(user, SECRET_KEY, {expiresIn: '1h'})
+            res.cookie('token', token)
             res.sendStatus(200)
             return
         }
@@ -41,9 +44,10 @@ async function authRegistration(req: Request, res: Response) {
         return
     }
 
-    console.log(JSON.stringify(newUser), 'Успешная регистрация')
-    res.cookie('user', JSON.stringify(newUser))
-    res.sendStatus(201)
+    // console.log(JSON.stringify(newUser), 'Успешная регистрация')
+    const token = sign(newUser, SECRET_KEY, {expiresIn: '1h'})
+    res.cookie('token', token)
+    res.sendStatus(200)
 }
 
 

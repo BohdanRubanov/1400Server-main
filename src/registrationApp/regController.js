@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Пример сервиса, который будет проверять логин и пароль
 // Обычно в сервисе происходит запрос к базе данных
 const regServices_1 = __importDefault(require("./regServices"));
+const token_1 = require("../config/token");
+const jsonwebtoken_1 = require("jsonwebtoken");
 function login(req, res) {
     res.render('login');
 }
@@ -26,8 +28,8 @@ function authLogin(req, res) {
         const userData = req.body;
         const user = yield regServices_1.default.authenticateUser(userData.email, userData.password);
         if (user) {
-            console.log(JSON.stringify(user), "Успешный вход");
-            res.cookie('user', JSON.stringify(user));
+            const token = (0, jsonwebtoken_1.sign)(user, token_1.SECRET_KEY, { expiresIn: '1h' });
+            res.cookie('token', token);
             res.sendStatus(200);
             return;
         }
@@ -43,9 +45,10 @@ function authRegistration(req, res) {
             res.sendStatus(409);
             return;
         }
-        console.log(JSON.stringify(newUser), 'Успешная регистрация');
-        res.cookie('user', JSON.stringify(newUser));
-        res.sendStatus(201);
+        // console.log(JSON.stringify(newUser), 'Успешная регистрация')
+        const token = (0, jsonwebtoken_1.sign)(newUser, token_1.SECRET_KEY, { expiresIn: '1h' });
+        res.cookie('token', token);
+        res.sendStatus(200);
     });
 }
 const regController = {
