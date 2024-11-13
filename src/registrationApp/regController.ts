@@ -38,8 +38,8 @@ async function authRegistration(req: Request, res: Response) {
     const newUser = await regService.registerUser(user.email, user.password, user.username);
 
 
-    if (newUser == "User exists") {
-        console.log('User exists')
+    if (newUser.status == "error") {
+        console.log('errir')
         res.sendStatus(409);
         return
     }
