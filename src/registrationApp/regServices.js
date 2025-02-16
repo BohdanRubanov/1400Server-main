@@ -17,24 +17,24 @@ function authenticateUser(email, password) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield regRepository_1.default.findUserByEmail(email);
         if (!user) {
-            return null;
+            return { status: 'error', message: 'user not found' };
         }
         if (user.password != password) {
-            return null;
+            return { status: 'error', message: 'incorrect password' };
         }
         const userWithoutPassword = {
             username: user.username,
             email: user.email,
             role: user.role
         };
-        return userWithoutPassword;
+        return { status: 'success', data: userWithoutPassword };
     });
 }
 function registerUser(email, password, username) {
     return __awaiter(this, void 0, void 0, function* () {
         const userExist = yield regRepository_1.default.findUserByEmail(email);
         if (userExist) {
-            return "User exists";
+            return { status: 'error', message: 'user not found' };
         }
         const newUser = {
             email: email,
@@ -43,7 +43,10 @@ function registerUser(email, password, username) {
             role: "user"
         };
         const createUser = yield regRepository_1.default.createUser(newUser);
-        return createUser;
+        if (!createUser) {
+            return { status: 'error', message: 'create error' };
+        }
+        return { status: 'success', data: createUser };
     });
 }
 const regService = {

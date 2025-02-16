@@ -1,161 +1,44 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import client from '../client/prismaClient';
+import { errors, IErrors } from '../config/errorCodes'
 
-
-async function getPostCount(){
-    try{
-
-        let count = await client.post.count()
-        if (!count){
-            return {
-                status: 'not found',
-                message: 'Posts not found',
-            }}
-        
-        return {
-
-            status: 'success',
-            message: 'Posts successfully found',
-            count: count,
-            }
-
-
-        }catch (err) {
-        if (err instanceof Prisma.PrismaClientKnownRequestError){
-            if (err.code == 'P2002'){
-                console.log(err.message);
-                throw err;
-            }
-            else if (err.code == 'P2015'){
-                console.log(err.message);
-                throw err;
-            }
-            else if (err.code == 'P2019'){
-                console.log(err.message);
-                throw err;
-            }
-            
-
-    }
-    return {
-        status: 'error',
-        message: 'error',
-    }
-        }
-}
 
 async function getAllPosts(){
     try{
         let posts = await client.post.findMany({
         
         })
-        if (!posts) {
-            return {
-                status: 'not found',
-                message: 'Posts not found',
-            }}
-        return{
-            status: 'success',
-            message: 'Posts successfully found',
-            posts: posts,
+        return posts
+    } catch(error){
+        if (error instanceof Prisma.PrismaClientKnownRequestError){
+            if (error.code in Object.keys(errors)){
+                const errorKey: keyof IErrors = error.code
+                console.log(errors[errorKey])
+            }
         }
-    } catch (err) {
-        if (err instanceof Prisma.PrismaClientKnownRequestError){
-            if (err.code == 'P2002'){
-                console.log(err.message);
-                throw err;
-            }
-            else if (err.code == 'P2015'){
-                console.log(err.message);
-                throw err;
-            }
-            else if (err.code == 'P2019'){
-                console.log(err.message);
-                throw err;
-            }
-    }}
+    }
 }
 
 async function getPostById(id: number){
-    try{
     let post = await client.post.findUnique({
         where:{
             id: id
         }
-    
     })
-    if (!post) {
-        return {
-            status: 'error',
-            message: 'Post not found',
-            data: null
-        }}
-    return {
-        status: 'success',
-        message: 'Posts successfully found',
-        post: post
-    }
-    } catch (err) {
-        if (err instanceof Prisma.PrismaClientKnownRequestError){
-            if (err.code == 'P2002'){
-                console.log(err.message);
-                throw err;
-            }
-            else if (err.code == 'P2015'){
-                console.log(err.message);
-                throw err;
-            }
-            else if (err.code == 'P2019'){
-                console.log(err.message);
-                throw err;
-            }
-    }
-        return {
-            status: 'error',
-            message: 'error',
-        }}
+    return post
 
 }
 
-
 async function createPost(data: Prisma.PostCreateInput){
-    try{
     let post = await client.post.create({
         data: data
     })
-    if (!post) {
-        return {
-            status: 'not found',
-            message: 'Post not found',
-            data: null
-        }}
-    return {
-        status: 'success',
-        message: 'Posts successfully found',
-        post: post
-    }
-    }catch (err) {
-        if (err instanceof Prisma.PrismaClientKnownRequestError){
-            if (err.code == 'P2002'){
-                console.log(err.message);
-                throw err;
-            }
-            else if (err.code == 'P2015'){
-                console.log(err.message);
-                throw err;
-            }
-            else if (err.code == 'P2019'){
-                console.log(err.message);
-                throw err;
-            }
-    }}
+    return post
 }  
 
-
 const postRepository = {
-    getAllPosts:getAllPosts,
-    getPostById:getPostById,
-    createPost:createPost,
-    getPostCount:getPostCount
+    getAllPosts: getAllPosts,
+    getPostById: getPostById,
+    createPost: createPost
 }
 export default postRepository

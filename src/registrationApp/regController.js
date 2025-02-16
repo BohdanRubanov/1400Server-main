@@ -40,8 +40,8 @@ function authRegistration(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = req.body;
         const newUser = yield regServices_1.default.registerUser(user.email, user.password, user.username);
-        if (newUser == "User exists") {
-            console.log('User exists');
+        if (newUser.status == "error") {
+            console.log('errir');
             res.sendStatus(409);
             return;
         }

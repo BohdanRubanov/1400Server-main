@@ -1,46 +1,43 @@
-// Здесь вся логика работы с данными 
 import postRepository from "./postRepository";
-import { Prisma, PrismaClient } from '@prisma/client';
-import client from '../client/prismaClient';
+import { Post } from "@prisma/client";
+import { CreatePost } from "./types";
+import { IError, ISuccess } from '../types/types'
 
-
-
-async function getAllPosts(){
+async function getAllPosts(): Promise< ISuccess<Post[]> | IError >{
     
-    const context = {
-        posts: await postRepository.getAllPosts()
+    const posts = await postRepository.getAllPosts()
+
+    if (!posts){
+        return {status: 'error', message: 'post not found'};
     }
-    
-    return context
+    return {status: 'success', data: posts};
 }
 
-async function getPostById(id: number){
-    const data = await postRepository.getPostById(id)
+async function getPostById(id: number): Promise< ISuccess<Post> | IError > {
+    let post = await postRepository.getPostById(id)
 
-    if (data.status == 'error' || data.status == 'error'){
-        return {
-                    status: 'error',
-                    message: 'not found',
-                }}
-    console.log(data)
+    if (!post) {
+        return {status: 'error', message: 'post not found'}
+    }
 
-        
-    return {
-        context: data.post,
-        message: data.message,
-        status: data.status
-    }}
+    return {status: 'success', data: post}
     
-
-
-async function createPost(data: Prisma.PostCreateInput){
-    await postRepository.createPost(data)
 }
 
-const service_funcs = {
+
+async function createPost(data: CreatePost): Promise< ISuccess<Post> | IError >{
+    let post = await postRepository.createPost(data);
+    if (!post){
+        return {status: "error", message: "post create error"}
+    }
+
+    return {status: "success", data: post}
+}
+
+const productService = {
     getAllPosts: getAllPosts,
     getPostById: getPostById,
-    createPost: createPost
+    createPost: createPost,
 } 
 
-export default service_funcs
+export default productService
