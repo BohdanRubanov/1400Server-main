@@ -8,6 +8,8 @@ import express, { Express, Request, Response } from 'express'
 import path from 'path'
 
 import moment from 'moment'
+import tagRouter from './tagApp/tagRouter'
+import cors from 'cors'
 
 const app: Express = express()
 //створення експерес застосунку
@@ -24,9 +26,14 @@ app.set('views', path.join(__dirname, 'templates'))
 app.use(express.json()) 
 app.use(cookieParser())
 
+app.use(cors({
+    origin: ['http://localhost:3000']
+}))
+
 app.use('/static/', express.static(path.join(__dirname, 'static'))) 
 app.use('/posts/', router)
 app.use('/', regRouter)
+app.use('/tags', tagRouter)
 
 //оброблення get запиту, першим аргументом посилання, другим функція на цей запит
 //ця функція відправляє відповідь

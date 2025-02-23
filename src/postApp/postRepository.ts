@@ -29,7 +29,7 @@ async function getPostById(id: number){
 
 }
 
-async function createPost(data: Prisma.PostCreateInput){
+async function createPost(data: Prisma.PostUncheckedCreateInput){
     let post = await client.post.create({
         data: data
     })
