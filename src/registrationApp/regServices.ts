@@ -1,88 +1,56 @@
-import regRepository from './regRepository';
+import { Prisma } from "@prisma/client";
+import regRepository from "./regRepository";
+import { IError, ISuccess } from '../types/types'
+import { sign } from "jsonwebtoken";
+import { SECRET_KEY } from "../config/token";
+import { compare, hash } from "bcryptjs"
 
-interface IUser{
-    id: number,
-    username: string,
-    email: string,
-    password: string,
-    role: string
-}
-interface IUserWithouPassword{
-    username: string,
-    email: string,
-    role: string
-}
-
-
-interface IUserError{
-    status: 'error',
-    message: string
-}
-
-interface IUserSuccess{
-    status: 'success',
-    data: IUser
-}
-interface IUserSuccessAuthoristion{
-    status: 'success',
-    data: IUserWithouPassword
-}
-async function authenticateUser(email: string, password: string): Promise< IUserError | IUserSuccessAuthoristion >  {
-
-    const user = await regRepository.findUserByEmail(email)
-
-
+async function login(email: string, password: string): Promise< IError | ISuccess<string> > {
+    let user = await regRepository.findUserByEmail(email)
     if (!user){
         return {status: 'error', message: 'user not found'};
     }
 
+    const isMatch = await compare(password, user.password)
 
-
-    if (user.password != password) {
-        return {status: 'error', message: 'incorrect password'};
+    if (!isMatch){
+        return {status: 'error', message: 'passwords do not match'};
     }
 
-    const userWithoutPassword = {
-        username: user.username,
-        email: user.email,
-        role: user.role
-    }
+    const token = sign({id: user.id}, SECRET_KEY, {expiresIn: '1d'})
+
+    return {status: 'success', data: token};
+}
+
+
+
+async function registration(data: Prisma.UserCreateInput): Promise< IError | ISuccess<string> > {
+    const user = await regRepository.findUserByEmail(data.email)
     
-  
-    return {status: 'success', data: userWithoutPassword};
-}
-
-
-
-async function registerUser(email: string, password: string, username: string): Promise< IUserError | IUserSuccess >  {
-    const userExist = await regRepository.findUserByEmail(email)
-
-    if (userExist) {
-        return {status: 'error', message: 'user not found'}
+    if (user) {
+        return {status: 'error', message: 'User exists'}
     }
 
-    const newUser = {
-        email: email,
-        password: password,
-        username: username,
-        role: "user"
-    };
+    const hashedPassword = await hash(data.password, 10)
 
+    const userData = {
+        ...data,
+        password: hashedPassword
+    }
+    const newUser = await regRepository.createUser(userData)
+    if (!newUser) {
+        return {status: 'error', message: 'bad user'}
+    }
 
-    const createUser = await regRepository.createUser(newUser)
-
-    if (!createUser) {
-        return {status: 'error', message: 'create error'}
-    } 
-
-
-    return {status: 'success', data: createUser}
+    const token = sign({id: newUser.id}, SECRET_KEY, {expiresIn: '1d'})
+    return {status: 'success', data: token}
 }
 
 
-const regService = {
-    authenticateUser: authenticateUser,
-    registerUser: registerUser
+const regSerices = {
+    login: login,
+    registration: registration
 }
 
-export default regService
+
+export default regSerices;

@@ -1,41 +1,46 @@
+import { Prisma } from "@prisma/client";
+import client from "../client/prismaClient";
 
-import client from '../client/prismaClient';
+import { IErrors, errors } from "../config/errorCodes"
+import {CreateUser } from "./types"
 
-interface UserData {
-    email: string
-    password: string
-    username: string
-    role: string
-}
-
-async function findUserByEmail(email: string) {
-    
-    if (!email) {
-        throw new Error("Email is required");
-    }
-    const user = await client.user.findUnique({
-        where: {
-                email: email,
+async function findUserByEmail(email: string){
+    try {
+        let user = await client.user.findUnique({
+            where: {
+                email: email
             }
-    });
-
-    if (!user){
-        return null
+        })
+        return user;
+    } catch(error){
+        if (error instanceof Prisma.PrismaClientKnownRequestError){
+            if (error.code in Object.keys(errors)){
+                const errorKey: keyof IErrors = error.code
+                console.log(errors[errorKey])
+            }
+        }
     }
-    return user
 }
 
-
-async function createUser(userData: UserData) {
-    const user = await client.user.create({
-        data: userData,
-    });
-    return user
+async function createUser(data: CreateUser){
+    try{
+        const user = await client.user.create({
+            data: data
+        })
+        return user;
+    } catch(error){
+        if (error instanceof Prisma.PrismaClientKnownRequestError){
+            if (error.code in Object.keys(errors)){
+                const errorKey: keyof IErrors = error.code
+                console.log(errors[errorKey])
+            }
+        }
+    }
 }
 
 const regRepository = {
-    findUserByEmail:findUserByEmail,
-    createUser: createUser
+    findUserByEmail: findUserByEmail,
+    createUser: createUser,
 }
 
-export default regRepository
+export default regRepository;
