@@ -1,4 +1,5 @@
 import postRepository from "./postRepository";
+// тип должен импортироваться из types
 import { Post } from "@prisma/client";
 import { CreatePost } from "./types";
 import { IError, ISuccess } from '../types/types'

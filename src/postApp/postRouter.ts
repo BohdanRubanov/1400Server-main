@@ -8,7 +8,7 @@
 import express, {Router } from 'express'
 
 const router: Router = express.Router()
-
+// camelCase
 import controller_funcs from './postController'
 
 

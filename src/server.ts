@@ -1,5 +1,5 @@
 import cookieParser from 'cookie-parser'
-
+// четко называем то, что импортируем в данном случае импортируем роутер постов
 import router from './postApp/postRouter'
 import regRouter from './registrationApp/regRouter'
 
@@ -38,9 +38,11 @@ app.use('/tags', tagRouter)
 //оброблення get запиту, першим аргументом посилання, другим функція на цей запит
 //ця функція відправляє відповідь
 app.get('/', (req: Request, res: Response) => {
+    // ?
     res.sendFile(path.resolve(__dirname, "./templates/index.html"))
     console.log("ktoto zashel na stranicu")
 })
+// Здесь это не надо
 app.get('/user', (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "./templates/user.html"))
 })
@@ -49,7 +51,7 @@ app.get('/date', (req: Request, res: Response) => {
     
     res.send(moment().format('LTS'))
 })
-
+// Здесь это не надо
 const context ={
     comments: [{id: 1, title: 'Dislike', author: "Oleg", message: "23.09"}, 
                 {id: 2, title: 'Super cool', author: "Alex", message: "24.09"}, 
@@ -58,7 +60,7 @@ const context ={
 
 
 
-
+// Здесь это не надо
 app.get('/comments/', (req: Request, res: Response) => {
     res.render('comments', context)
 })
