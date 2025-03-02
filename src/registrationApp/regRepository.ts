@@ -21,6 +21,23 @@ async function findUserByEmail(email: string){
         }
     }
 }
+async function findUserById(id: number){
+    try {
+        let user = await client.user.findUnique({
+            where: {
+                id: id
+            }
+        })
+        return user;
+    } catch(error){
+        if (error instanceof Prisma.PrismaClientKnownRequestError){
+            if (error.code in Object.keys(errors)){
+                const errorKey: keyof IErrors = error.code
+                console.log(errors[errorKey])
+            }
+        }
+    }
+}
 
 async function createUser(data: CreateUser){
     try{
@@ -41,6 +58,7 @@ async function createUser(data: CreateUser){
 const regRepository = {
     findUserByEmail: findUserByEmail,
     createUser: createUser,
+    findUserById: findUserById
 }
 
 export default regRepository;

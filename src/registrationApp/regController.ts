@@ -14,10 +14,14 @@ async function registration(req : Request , res : Response){
     res.json(result)
 }
 
-
+async function getUserById(req: Request, res: Response){
+    const result = await regServices.getUserById(+res.locals.userId)
+    res.json(result)
+}
 
 const regController = {
     registration: registration,
-    login: login
+    login: login,
+    getUserById: getUserById
 }
 export default regController
