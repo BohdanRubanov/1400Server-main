@@ -1,14 +1,10 @@
 import cookieParser from 'cookie-parser'
-
-import router from './postApp/postRouter'
+import postRouter from './postApp/postRouter'
 import regRouter from './registrationApp/regRouter'
-
-import express, { Express, Request, Response } from 'express'
-
-import path from 'path'
-
-import moment from 'moment'
+import commentRouter from './commentApp/commentRouter'
 import tagRouter from './tagApp/tagRouter'
+import express, { Express, Request, Response } from 'express'
+import path from 'path'
 import cors from 'cors'
 
 const app: Express = express()
@@ -18,8 +14,6 @@ const app: Express = express()
 const PORT = 8000
 //адреса на наш комп'ютер
 const HOST = 'localhost'
-
-
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'templates'))
@@ -31,39 +25,10 @@ app.use(cors({
 }))
 
 app.use('/static/', express.static(path.join(__dirname, 'static'))) 
-app.use('/posts/', router)
+app.use('/posts/', postRouter)
 app.use('/', regRouter)
 app.use('/tags', tagRouter)
-
-//оброблення get запиту, першим аргументом посилання, другим функція на цей запит
-//ця функція відправляє відповідь
-app.get('/', (req: Request, res: Response) => {
-    res.sendFile(path.resolve(__dirname, "./templates/index.html"))
-    console.log("ktoto zashel na stranicu")
-})
-app.get('/user', (req: Request, res: Response) => {
-    res.sendFile(path.resolve(__dirname, "./templates/user.html"))
-})
-app.get('/date', (req: Request, res: Response) => {
-    console.log(moment().format('LTS'))
-    
-    res.send(moment().format('LTS'))
-})
-
-const context ={
-    comments: [{id: 1, title: 'Dislike', author: "Oleg", message: "23.09"}, 
-                {id: 2, title: 'Super cool', author: "Alex", message: "24.09"}, 
-                {id: 3, title: 'Too bad', author: "Ne Oleg", message: "25.09"}]
-}
-
-
-
-
-app.get('/comments/', (req: Request, res: Response) => {
-    res.render('comments', context)
-})
-
-
+app.use('/comments', commentRouter)
 
 
 //запускає додаток по порту та хосту та виконує задану функцію

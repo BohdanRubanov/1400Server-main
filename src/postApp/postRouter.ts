@@ -9,13 +9,13 @@ import express, {Router } from 'express'
 
 const router: Router = express.Router()
 
-import controller_funcs from './postController'
+import controllerFuncs from './postController'
 
 
-router.get('/', controller_funcs.getAllPosts)
+router.get('/', controllerFuncs.getAllPosts)
 
-router.get('/:id', controller_funcs.getPostById)
+router.get('/:id', controllerFuncs.getPostById)
 
-router.post('/create', controller_funcs.createPost)
+router.post('/create', controllerFuncs.createPost)
 
 export default router

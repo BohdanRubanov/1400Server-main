@@ -4,12 +4,8 @@ import  {Request, Response } from 'express'
 
 
 async function getAllPosts(req:Request, res:Response) {
-    const context = await postService.getAllPosts()
-    if (context.status == "error"){
-        res.send("error")
-        return
-    } 
-    res.render('posts', {posts: context.data})
+    const result = await postService.getAllPosts()
+    res.json(result)
     
 
 }
@@ -17,12 +13,7 @@ async function getAllPosts(req:Request, res:Response) {
 async function getPostById(req:Request, res:Response){
     let id = req.params.id
     const result = await postService.getPostById(+id)
-    if (result.status == "error"){
-        res.send("ban")
-        return
-        
-    } 
-    res.render('post', result.data)
+    res.json(result)
     
 }
 
@@ -41,10 +32,10 @@ async function createPost(req:Request, res:Response){
 
 
 
-const controller_funcs = {
+const controllerFuncs = {
     getAllPosts: getAllPosts,
     getPostById: getPostById,
     createPost: createPost,
 }
 
-export default controller_funcs
+export default controllerFuncs

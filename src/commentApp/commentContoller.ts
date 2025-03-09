@@ -4,12 +4,8 @@ import {Request, Response } from 'express'
 
 
 async function getAllComments(req:Request, res:Response) {
-    const context = await commentService.getAllComments()
-    if (context.status == "error"){
-        res.send("error")
-        return
-    } 
-    res.json({comments: context.data})
+    const result = await commentService.getAllComments()
+    res.json(result)
     
 
 }
@@ -17,21 +13,13 @@ async function getAllComments(req:Request, res:Response) {
 async function getCommentsByUserId(req:Request, res:Response){
     let id = req.params.id
     const result = await commentService.getCommentsByUserId(+id)
-    if (result.status == "error"){
-        res.send("ban")
-        return
-    } 
-    res.json(result.data)
+    res.json(result)
     
 }
 async function getCommentsByPostId(req:Request, res:Response){
     let id = req.params.id
     const result = await commentService.getCommentsByPostId(+id)
-    if (result.status == "error"){
-        res.send("ban")
-        return
-    } 
-    res.json(result.data)
+    res.json(result)
     
 }
 
@@ -39,10 +27,10 @@ async function getCommentsByPostId(req:Request, res:Response){
 
 
 
-const controller_funcs = {
+const controllerFuncs = {
     getAllComments: getAllComments,
     getCommentsByUserId: getCommentsByUserId,
     getCommentsByPostId: getCommentsByPostId,
 }
 
-export default controller_funcs
+export default controllerFuncs

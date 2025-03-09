@@ -1,6 +1,7 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma} from '@prisma/client';
 import client from '../client/prismaClient';
 import { errors, IErrors } from '../config/errorCodes'
+import { CreatePost, ErrorType } from './types';
 
 
 async function getAllPosts(){
@@ -10,7 +11,7 @@ async function getAllPosts(){
         })
         return posts
     } catch(error){
-        if (error instanceof Prisma.PrismaClientKnownRequestError){
+        if (error instanceof ErrorType){
             if (error.code in Object.keys(errors)){
                 const errorKey: keyof IErrors = error.code
                 console.log(errors[errorKey])
@@ -29,7 +30,7 @@ async function getPostById(id: number){
 
 }
 
-async function createPost(data: Prisma.PostUncheckedCreateInput){
+async function createPost(data: CreatePost){
     let post = await client.post.create({
         data: data
     })

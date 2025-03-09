@@ -1,6 +1,5 @@
 import postRepository from "./postRepository";
-import { Post } from "@prisma/client";
-import { CreatePost } from "./types";
+import { CreatePost, Post } from "./types";
 import { IError, ISuccess } from '../types/types'
 
 async function getAllPosts(): Promise< ISuccess<Post[]> | IError >{
