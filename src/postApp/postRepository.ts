@@ -7,7 +7,9 @@ import { CreatePost, ErrorType } from './types';
 async function getAllPosts(){
     try{
         let posts = await client.post.findMany({
-        
+            include: {
+                tags: true
+            }
         })
         return posts
     } catch(error){
@@ -24,6 +26,9 @@ async function getPostById(id: number){
     let post = await client.post.findUnique({
         where:{
             id: id
+        }, 
+        include: {
+            tags: true
         }
     })
     return post

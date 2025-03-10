@@ -189,6 +189,7 @@ async function createPostWithCommentsAndTags() {
     },
     include: {
         comments: true,
+        tags: true
       }
   })}
 
