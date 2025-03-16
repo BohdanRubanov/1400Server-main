@@ -46,9 +46,10 @@ async function registration(data: Prisma.UserCreateInput): Promise< IError | ISu
     return {status: 'success', data: token}
 }
 async function getUserById(id: number): Promise< IError | ISuccess<object> >{
+    
     let user = await regRepository.findUserById(id);
     if (!user){
-        return {status: "error", message: "bad user"}
+        return {status: "error", message: String(id)}
     }
 
     return {status: "success", data: {id: user.id, username: user.username, email: user.email, role: user.role}}

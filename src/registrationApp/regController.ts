@@ -15,7 +15,7 @@ async function registration(req : Request , res : Response){
 }
 
 async function getUserById(req: Request, res: Response){
-    const result = await regServices.getUserById(+res.locals.userId)
+    const result = await regServices.getUserById(+res.locals.userId.id)
     res.json(result)
 }
 
